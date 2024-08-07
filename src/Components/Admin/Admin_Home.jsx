@@ -378,12 +378,12 @@ function Admin_Home() {
 									<li><Link to="/admin/events">Events</Link></li>
 								</ul>
 							</div>
-							<div className="tab-pane fade" id="v-pills-chat" role="tabpanel" aria-labelledby="v-pills-chat-tab">
+							{/*<div className="tab-pane fade" id="v-pills-chat" role="tabpanel" aria-labelledby="v-pills-chat-tab">
 								<p>Messages </p>
 								<ul>
 									<li><Link to="/admin/messages">Messages </Link></li>
 								</ul>
-							</div>
+							</div>*/}
 							<div className="tab-pane fade" id="v-pills-noticeboard" role="tabpanel" aria-labelledby="v-pills-noticeboard-tab">
 								<p>Notice Board</p>
 								<ul>
@@ -440,10 +440,10 @@ function Admin_Home() {
 							<div className="tab-pane fade" id="v-pills-recruitment" role="tabpanel" aria-labelledby="v-pills-recruitment-tab">
 								<p>Recruit</p>
 								<ul>
-									<li><Link to="/admin/recruit-dashborad"> Dashboard </Link></li>
+									{/*<li><Link to="/admin/recruit-dashborad"> Dashboard </Link></li>*/}
 									<li><Link to="/admin/skills"> Skills </Link></li>
-									<li><Link to="/admin/Jobs"> Jobs </Link></li>
-									<li><Link to="/admin/job-application"> Job Application </Link></li>
+									{/*<li><Link to="/admin/Jobs"> Jobs </Link></li>*/}
+									{/*<li><Link to="/admin/job-application"> Job Application </Link></li>*/}
 									<li><Link to="/admin/interview-schedule"> Interview Schedule </Link></li>
 									<li><Link to="/admin/offer-letters"> Offer Letters </Link></li>
 									<li><Link to="/admin/candidate-databases"> Candidate Databases </Link></li>
@@ -451,12 +451,12 @@ function Admin_Home() {
 									<li><Link to="https://www.posistrength.com/p/hire-developers"> Career Site </Link></li>
 								</ul>
 							</div>
-							<div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
+							{/*<div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
 								<p>Zoom Meeting</p>
 								<ul>
 									<li><Link to="/admin/zoom-meeting"> Zoom Meeting </Link></li>
 								</ul>
-							</div>
+							</div>*/}
 
 							<div className="tab-pane fade" id="v-pills-knowledgebase-2" role="tabpanel" aria-labelledby="v-pills-knowledgebase-tab-2">
 								<p>Reports</p>
