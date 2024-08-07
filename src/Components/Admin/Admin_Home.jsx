@@ -59,11 +59,11 @@ function Admin_Home() {
 								<i className='fa fa-sticky-note'></i>
 							</a>
 						</li>
-						<li className="nav-item">
+						{/* <li className="nav-item">
 							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Timer">
 								<i className="fa fa-clock" type="button" data-bs-toggle="offcanvas" data-bs-target="#TIMER" aria-controls="offcanvasRight"></i>
 							</a>
-						</li>
+						</li> */}
 
 						<li className="nav-item">
 							<a href="" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create New">
@@ -78,89 +78,6 @@ function Admin_Home() {
 								</ul>
 							</a>
 						</li>
-						{/* <li className="nav-item dropdown">
-							<a href="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-								<i className="far fa-bell"></i> <span className="badge rounded-pill">3</span>
-							</a>
-							<div className="dropdown-menu notifications">
-								<div className="topnav-dropdown-header">
-									<span className="notification-title">Notifications</span>
-									<a href="" className="clear-noti"> Clear All </a>
-								</div>
-								<div className="noti-content">
-									<ul className="notification-list">
-										<li className="notification-message">
-											<a href="activities">
-												<div className="media d-flex">
-													<span className="avatar flex-shrink-0">
-														<img alt="" src="/assets/img/profiles/avatar-02.jpg" />
-													</span>
-													<div className="media-body flex-grow-1">
-														<p className="noti-details"><span className="noti-title">John Doe</span> added new task <span className="noti-title">Patient appointment booking</span></p>
-														<p className="noti-time"><span className="notification-time">4 mins ago</span></p>
-													</div>
-												</div>
-											</a>
-										</li>
-										<li className="notification-message">
-											<a href="activities">
-												<div className="media d-flex">
-													<span className="avatar flex-shrink-0">
-														<img alt="" src="/assets/img/profiles/avatar-03.jpg" />
-													</span>
-													<div className="media-body flex-grow-1">
-														<p className="noti-details"><span className="noti-title">Tarah Shropshire</span> changed the task name <span className="noti-title">Appointment booking with payment gateway</span></p>
-														<p className="noti-time"><span className="notification-time">6 mins ago</span></p>
-													</div>
-												</div>
-											</a>
-										</li>
-										<li className="notification-message">
-											<a href="activities">
-												<div className="media d-flex">
-													<span className="avatar flex-shrink-0">
-														<img alt="" src="/assets/img/profiles/avatar-06.jpg" />
-													</span>
-													<div className="media-body flex-grow-1">
-														<p className="noti-details"><span className="noti-title">Misty Tison</span> added <span className="noti-title">Domenic Houston</span> and <span className="noti-title">Claire Mapes</span> to project <span className="noti-title">Doctor available module</span></p>
-														<p className="noti-time"><span className="notification-time">8 mins ago</span></p>
-													</div>
-												</div>
-											</a>
-										</li>
-										<li className="notification-message">
-											<a href="activities">
-												<div className="media d-flex">
-													<span className="avatar flex-shrink-0">
-														<img alt="" src="/assets/img/profiles/avatar-17.jpg" />
-													</span>
-													<div className="media-body flex-grow-1">
-														<p className="noti-details"><span className="noti-title">Rolland Webber</span> completed task <span className="noti-title">Patient and Doctor video conferencing</span></p>
-														<p className="noti-time"><span className="notification-time">12 mins ago</span></p>
-													</div>
-												</div>
-											</a>
-										</li>
-										<li className="notification-message">
-											<a href="activities">
-												<div className="media d-flex">
-													<span className="avatar flex-shrink-0">
-														<img alt="" src="/assets/img/profiles/avatar-13.jpg" />
-													</span>
-													<div className="media-body flex-grow-1">
-														<p className="noti-details"><span className="noti-title">Bernardo Galaviz</span> added new task <span className="noti-title">Private chat module</span></p>
-														<p className="noti-time"><span className="notification-time">2 days ago</span></p>
-													</div>
-												</div>
-											</a>
-										</li>
-									</ul>
-								</div>
-								<div className="topnav-dropdown-footer">
-									<a href="activities">View all Notifications</a>
-								</div>
-							</div>
-						</li> */}
 						<li className="nav-item dropdown has-arrow main-drop">
 							<a>
 								<span className="user-img"><img src={`data:image/png;base64,${admin ? admin.fileData : 'Admin'}`} alt="0" style={{borderRadius:'50%',height:'30px'}} /></span>
@@ -270,11 +187,11 @@ function Admin_Home() {
 									group_add
 								</span>
 							</a>
-							<a className="nav-link" id="v-pills-video-tab" title="Video" data-bs-toggle="pill" href="#v-pills-video" role="tab" aria-controls="v-pills-video" aria-selected="false">
+							{/* <a className="nav-link" id="v-pills-video-tab" title="Video" data-bs-toggle="pill" href="#v-pills-video" role="tab" aria-controls="v-pills-video" aria-selected="false">
 								<span className="material-icons-outlined">
 									videocam
 								</span>
-							</a>
+							</a> */}
 							<a className="nav-link"
 								id="v-pills-knowledgebase-tab-2"
 								title="Knowledgebase 2"
@@ -440,22 +357,31 @@ function Admin_Home() {
 							<div className="tab-pane fade" id="v-pills-recruitment" role="tabpanel" aria-labelledby="v-pills-recruitment-tab">
 								<p>Recruit</p>
 								<ul>
+
+									{/* <li><Link to="/admin/recruit-dashborad"> Dashboard </Link></li> */}
+									<li><Link to="/admin/skills"> Skills </Link></li>
+									{/* <li><Link to="/admin/Jobs"> Jobs </Link></li> */}
+									{/* <li><Link to="/admin/job-application"> Job Application </Link></li> */}
 									{/*<li><Link to="/admin/recruit-dashborad"> Dashboard </Link></li>*/}
 									<li><Link to="/admin/skills"> Skills </Link></li>
 									{/*<li><Link to="/admin/Jobs"> Jobs </Link></li>*/}
 									{/*<li><Link to="/admin/job-application"> Job Application </Link></li>*/}
+
 									<li><Link to="/admin/interview-schedule"> Interview Schedule </Link></li>
 									<li><Link to="/admin/offer-letters"> Offer Letters </Link></li>
-									<li><Link to="/admin/candidate-databases"> Candidate Databases </Link></li>
+									{/* <li><Link to="/admin/candidate-databases"> Candidate Databases </Link></li> */}
 									<li><Link to="/admin/reports"> Reports </Link></li>
 									<li><Link to="https://www.posistrength.com/p/hire-developers"> Career Site </Link></li>
 								</ul>
 							</div>
+
+							{/* <div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
 							{/*<div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
 								<p>Zoom Meeting</p>
 								<ul>
 									<li><Link to="/admin/zoom-meeting"> Zoom Meeting </Link></li>
 								</ul>
+							</div> */}
 							</div>*/}
 
 							<div className="tab-pane fade" id="v-pills-knowledgebase-2" role="tabpanel" aria-labelledby="v-pills-knowledgebase-tab-2">
@@ -544,7 +470,7 @@ function Admin_Home() {
 						<AdminStickyNotesSection />
 					</div>
 				</div>
-				<div className="offcanvas offcanvas-end" tabIndex="-1" id="TIMER" aria-labelledby="offcanvasRightLabel" style={{ width: '85%' }}>
+				{/* <div className="offcanvas offcanvas-end" tabIndex="-1" id="TIMER" aria-labelledby="offcanvasRightLabel" style={{ width: '85%' }}>
 					<div className="offcanvas-header">
 						<h2 id="offcanvasRightLabel" className='text-bold'><b>START TIMER</b></h2>
 						<button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -552,7 +478,7 @@ function Admin_Home() {
 					<div className="offcanvas-body">
 						<AdminTimelogTimer />
 					</div>
-				</div>
+				</div> */}
 
 
 				<Outlet />

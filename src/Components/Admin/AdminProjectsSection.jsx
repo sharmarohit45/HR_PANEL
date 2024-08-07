@@ -20,11 +20,11 @@ const AdminProjectsSection = () => {
             setLoading(false);
         }
     }
-    async function deleteData(id) {
+    async function deleteData(projectId) {
         try {
-            const response = await axios.delete(`https://smarthrbackend-production.up.railway.app//project/${id}`);
-
+            await axios.delete(`https://smarthrbackend-production.up.railway.app/project/${projectId}`);
             toast.success("Data Deleted")
+            getData();
         } catch (error) {
             console.error('Failed:', error);
             toast.error("Failed")
@@ -149,13 +149,13 @@ const AdminProjectsSection = () => {
                                                         <MoreVertIcon style={{ fontSize: '20px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                         <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
                                                             <li><a className="dropdown-item" ><i className="fa fa-eye"></i> View</a></li>
-                                                            <li onClick={() => deleteData(params.row.id)}><a className="dropdown-item"><i className="fa fa-pen"></i> Edit</a></li>
+                                                            <li ><a className="dropdown-item"><i className="fa fa-pen"></i> Edit</a></li>
                                                             {/* <li><a className="dropdown-item"><i className="fa fa-copy"></i> Duplicate</a></li>
                                                             <li><a className="dropdown-item"><i className="fa fa-project-diagram"></i> Gant Chart</a></li>
                                                             <li><a className="dropdown-item"><i className="fa fa-share-square"></i> Public Gant Chart</a></li>
                                                             <li><a className="dropdown-item"><i className="fa fa-share-square"></i> Public Task Board</a></li>
                                                             <li><a className="dropdown-item"><i className="fa fa-archive"></i> Archive</a></li> */}
-                                                            <li><a className="dropdown-item"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+                                                            <li onClick={() => deleteData(params.row.projectId)}><a className="dropdown-item"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                                         </ul>
                                                     </div>
                                                 )
@@ -163,6 +163,7 @@ const AdminProjectsSection = () => {
                                         ]}
                                         rows={rows.map(row => ({
                                             id: row.id,
+                                            projectId:row.id,
                                             code: row.code,
                                             projectName: row.projectName,
                                             members: row.members.map(emp => ({
