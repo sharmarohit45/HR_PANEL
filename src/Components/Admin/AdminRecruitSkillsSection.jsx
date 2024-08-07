@@ -1,9 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminSkillForm from './AdminSkillForm';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 const AdminRecruitSkillsSection = () => {
+    const [data, setData] = useState([]);
+    const getData = async () => {
+        try {
+            const response = await axios.get("https://smarthrbackend-production.up.railway.app/skills");
+            setData(response.data);
+        } catch (error) {
+            console.log("feching failed");
+
+        }
+    }
+    const deleteData = async (id) => {
+        try {
+            await axios.delete(`https://smarthrbackend-production.up.railway.app/skills/${id}`);
+            toast.success("Deleted Successfully");
+            
+        } catch (error) {
+            console.log("feching failed");
+            toast.error("Failed")
+        }
+    }
+    useEffect(() => { getData(); }, [])
     return (
         <>
             <div className="page-wrapper">
@@ -33,7 +56,7 @@ const AdminRecruitSkillsSection = () => {
                             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div className="offcanvas-body">
-                           <AdminSkillForm />
+                            <AdminSkillForm addSkill={getData} />
                         </div>
                     </div>
                     <div className="row">
@@ -42,9 +65,9 @@ const AdminRecruitSkillsSection = () => {
                                 <DataGrid
                                     pageSizeOptions={[5, 10, { value: 100, label: '100' }]}
                                     columns={[
-                                        // { field: 'empId', headerName: 'ID', hideable: false, width: 100 },
-                                        { field: 'name', headerName: 'Name', hideable: false, width: 1000 },
-                                        
+                                        { field: 'id', headerName: 'ID', hideable: false, width: 100 },
+                                        { field: 'name', headerName: 'Name', hideable: false, width: 800 },
+
                                         {
                                             field: 'action',
                                             headerName: 'Action',
@@ -53,25 +76,18 @@ const AdminRecruitSkillsSection = () => {
                                                 <div>
                                                     <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                     <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
-                                                        <li><a className="dropdown-item"><i className="fa fa-eye"></i> View</a></li>
                                                         <li><a className="dropdown-item"><i className="fa fa-pen"></i> Edit</a></li>
-                                                        <li><a className="dropdown-item" href="#"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+                                                        <li onClick={()=>deleteData(params.row.id)}><a className="dropdown-item" href="#"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             ),
                                         },
                                     ]}
-                                    // rows={rows.map(row => ({
-                                    //     id: row.empId,
-                                    //     empId: row.empId,
-                                    //     employeeIdentity: row.employeeIdentity,
-                                    //     empName: row.empName,
-                                    //     email: row.email,
-                                    //     empUserRole: row.emp_User_Name,
-                                    //     reportingTo: row.reportingTo,
-                                    //     Status: row.Status,
-                                    //     imageData: row.imageData,
-                                    // }))}
+                                    rows={data.map(row => ({
+                                        id: row.skillId,
+                                        name: row.skill,
+                                        action: row.action
+                                    }))}
                                     slots={{ toolbar: GridToolbar }}
                                     checkboxSelection
                                 />
@@ -79,6 +95,7 @@ const AdminRecruitSkillsSection = () => {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </>
     )
