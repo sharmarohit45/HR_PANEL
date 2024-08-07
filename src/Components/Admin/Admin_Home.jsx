@@ -376,13 +376,13 @@ function Admin_Home() {
 							</div>
 
 							{/* <div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
-							{/*<div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
+							<div className="tab-pane fade" id="v-pills-video" role="tabpanel" aria-labelledby="v-pills-video-tab">
 								<p>Zoom Meeting</p>
 								<ul>
 									<li><Link to="/admin/zoom-meeting"> Zoom Meeting </Link></li>
 								</ul>
+							</div> 
 							</div> */}
-							</div>*/}
 
 							<div className="tab-pane fade" id="v-pills-knowledgebase-2" role="tabpanel" aria-labelledby="v-pills-knowledgebase-tab-2">
 								<p>Reports</p>
