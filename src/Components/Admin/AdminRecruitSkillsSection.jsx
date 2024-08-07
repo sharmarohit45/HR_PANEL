@@ -16,10 +16,11 @@ const AdminRecruitSkillsSection = () => {
 
         }
     }
-    const deleteData = async (id) => {
+    const deleteData = async (skillId) => {
         try {
-            await axios.delete(`https://smarthrbackend-production.up.railway.app/skills/${id}`);
+            await axios.delete(`https://smarthrbackend-production.up.railway.app/skills/${skillId}`);
             toast.success("Deleted Successfully");
+            getData();
             
         } catch (error) {
             console.log("feching failed");
@@ -77,7 +78,7 @@ const AdminRecruitSkillsSection = () => {
                                                     <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                     <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
                                                         <li><a className="dropdown-item"><i className="fa fa-pen"></i> Edit</a></li>
-                                                        <li onClick={()=>deleteData(params.row.id)}><a className="dropdown-item" href="#"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+                                                        <li onClick={()=>deleteData(params.row.skillId)}><a className="dropdown-item"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             ),
@@ -85,6 +86,7 @@ const AdminRecruitSkillsSection = () => {
                                     ]}
                                     rows={data.map(row => ({
                                         id: row.skillId,
+                                        skillId: row.skillId,
                                         name: row.skill,
                                         action: row.action
                                     }))}
