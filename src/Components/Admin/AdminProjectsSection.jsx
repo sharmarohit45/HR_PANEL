@@ -4,26 +4,35 @@ import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminAddProjectForm from './AdminAddProjectForm';
+import { toast, ToastContainer } from 'react-toastify';
 
 const AdminProjectsSection = () => {
     const [rows, setRows] = useState([]);
-    const [loading, setLoading] = useState(true); // State to manage loading state
+    const [loading, setLoading] = useState(true);
 
     async function getData() {
         try {
             const response = await axios.get("https://smarthrbackend-production.up.railway.app/getallProject");
             setRows(response.data);
-            setLoading(false); // Set loading to false once data is fetched
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching data:', error);
-            setLoading(false); // Ensure loading is set to false on error
-            // Handle error state or show a message to the user
+            setLoading(false);
         }
     }
+    async function deleteData(id) {
+        try {
+            const response = await axios.delete(`https://smarthrbackend-production.up.railway.app//project/${id}`);
 
+            toast.success("Data Deleted")
+        } catch (error) {
+            console.error('Failed:', error);
+            toast.error("Failed")
+        }
+    }
     useEffect(() => {
         getData();
-    }, []); // Run once on component mount
+    }, []);
 
     return (
         <>
@@ -43,7 +52,7 @@ const AdminProjectsSection = () => {
                         </div>
                     </div>
 
-                   
+
 
                     <div className="row mb-3">
                         <div className="row mb-3">
@@ -66,22 +75,63 @@ const AdminProjectsSection = () => {
                                                 headerName: 'Members',
                                                 hideable: false,
                                                 width: 200,
-                                                renderCell: (params) => (
-                                                    <>
-                                                        {params.value && params.value.map((imageData, index) => (
-                                                            <img
-                                                                key={index}
-                                                                src={`data:image/png;base64,${imageData}`}
-                                                                alt={`Member ${index + 1}`}
-                                                                style={{ height: '30px', width: '30px', marginRight: '10px', borderRadius: '50%' }}
-                                                            />
-                                                        ))}
-                                                    </>
-                                                )
-                                            },
+                                                renderCell: (params) => {
+                                                    // Ensure params.value is an array of member objects
+                                                    const members = params.value || [];
+
+                                                    return (
+                                                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                            {members.length > 0 ? (
+                                                                members.map((member, index) => (
+                                                                    <div key={index} style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+                                                                        {member.imageData ? (
+                                                                            <img
+                                                                                src={`data:image/png;base64,${member.imageData}`} // Ensure MIME type matches the data format
+                                                                                alt={`Image of ${member.empName}`}
+                                                                                style={{ height: '30px', width: '30px', borderRadius: '50%' }}
+                                                                            />
+                                                                        ) : (
+                                                                            <div style={{ height: '30px', width: '30px', borderRadius: '50%', backgroundColor: '#ccc' }} />
+                                                                        )}
+                                                                        <span style={{ marginLeft: '5px' }}>{member.empName}</span>
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <span>No Members</span>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                }
+                                            }
+                                            ,
                                             { field: 'startDate', headerName: 'Start Date', hideable: false, width: 150 },
                                             { field: 'deadline', headerName: 'Deadline', hideable: false, width: 150 },
-                                            { field: 'client', headerName: 'Client', hideable: false, width: 150 },
+                                            {
+                                                field: 'client',
+                                                headerName: 'Client',
+                                                hideable: false,
+                                                width: 200,
+                                                renderCell: (params) => {
+                                                    // Ensure params.value is the client object
+                                                    const { clientName, imageProfileData } = params.value || {};
+
+                                                    return (
+                                                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                            {imageProfileData ? (
+                                                                <img
+                                                                    src={`data:image/png;base64,${imageProfileData}`} // Ensure MIME type matches your data
+                                                                    alt={`Profile of ${clientName}`}
+                                                                    style={{ height: '30px', width: '30px', borderRadius: '50%', marginRight: '10px' }}
+                                                                />
+                                                            ) : (
+                                                                <div style={{ height: '30px', width: '30px', borderRadius: '50%', backgroundColor: '#ccc', marginRight: '10px' }} />
+                                                            )}
+                                                            <span>{clientName || 'No Client Name'}</span>
+                                                        </div>
+                                                    );
+                                                }
+                                            }
+                                            ,
                                             {
                                                 field: 'status', headerName: 'Status', hideable: false, width: 150, renderCell: (params) => (
                                                     <select className="form-select mt-2" aria-label="status">
@@ -99,20 +149,36 @@ const AdminProjectsSection = () => {
                                                         <MoreVertIcon style={{ fontSize: '20px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                         <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
                                                             <li><a className="dropdown-item" ><i className="fa fa-eye"></i> View</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-pen"></i> Edit</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-copy"></i> Duplicate</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-project-diagram"></i> Gant Chart</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-share-square"></i> Public Gant Chart</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-share-square"></i> Public Task Board</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-archive"></i> Archive</a></li>
-                                                            <li><a className="dropdown-item" href="#"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
+                                                            <li onClick={() => deleteData(params.row.id)}><a className="dropdown-item"><i className="fa fa-pen"></i> Edit</a></li>
+                                                            {/* <li><a className="dropdown-item"><i className="fa fa-copy"></i> Duplicate</a></li>
+                                                            <li><a className="dropdown-item"><i className="fa fa-project-diagram"></i> Gant Chart</a></li>
+                                                            <li><a className="dropdown-item"><i className="fa fa-share-square"></i> Public Gant Chart</a></li>
+                                                            <li><a className="dropdown-item"><i className="fa fa-share-square"></i> Public Task Board</a></li>
+                                                            <li><a className="dropdown-item"><i className="fa fa-archive"></i> Archive</a></li> */}
+                                                            <li><a className="dropdown-item"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                                         </ul>
                                                     </div>
                                                 )
                                             },
                                         ]}
-                                        rows={rows}
-                                        loading={loading} // Show loading indicator while fetching data
+                                        rows={rows.map(row => ({
+                                            id: row.id,
+                                            code: row.code,
+                                            projectName: row.projectName,
+                                            members: row.members.map(emp => ({
+                                                empName: emp.empName,
+                                                imageData: emp.imageData
+                                            })),
+                                            startDate: row.startDate,
+                                            deadline: row.deadline,
+                                            client: {
+                                                clientName: row.client.clientName,
+                                                imageProfileData: row.client.imageProfileData
+                                            },
+                                            Status: row.Status,
+                                            imageProfileData: row.client.imageProfileData
+                                        }))}
+                                        loading={loading}
                                         slots={{
                                             toolbar: GridToolbar,
                                         }}
@@ -121,18 +187,18 @@ const AdminProjectsSection = () => {
                             </div>
                         </div>
 
-                        {/* Offcanvas for adding projects */}
                         <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style={{ width: '85%' }}>
                             <div className="offcanvas-header">
                                 <h2 id="offcanvasRightLabel" className='text-bold'><b>Projects</b></h2>
                                 <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div className="offcanvas-body">
-                                <AdminAddProjectForm />
+                                <AdminAddProjectForm onProject={getData} />
                             </div>
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </>
     );
