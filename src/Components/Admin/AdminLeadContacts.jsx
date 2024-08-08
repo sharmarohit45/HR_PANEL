@@ -11,6 +11,7 @@ import { toast, ToastContainer } from 'react-toastify';
 function AdminLeadContacts() {
     const [rows, setRows] = useState([]);
     const navigate = useNavigate();
+    const [selectedId, setSelectedId] = useState(null);
     useEffect(() => {
         getData();
     }, []);
@@ -48,7 +49,9 @@ function AdminLeadContacts() {
             throw error;
         }
     };
-
+    const handleEditClick = (id) => {
+        setSelectedId(id);
+    };
     return (
         <>
             <div className="page-wrapper">
@@ -103,7 +106,7 @@ function AdminLeadContacts() {
                                                     <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                     <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
                                                         <li onClick={() => profileOnchange(params.row.id)}><a className="dropdown-item" ><i className="fa fa-eye"></i> View</a></li>
-                                                        <li><a className="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#updateForm" aria-controls="offcanvasRight"><i className="fa fa-pen"></i> Edit</a></li>
+                                                        <li onClick={() => handleEditClick(params.row.id)}><a className="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#updateForm" aria-controls="offcanvasRight"><i className="fa fa-pen"></i> Edit</a></li>
                                                         <li onClick={() => deleteEmployee(params.row.id)}><a className="dropdown-item" ><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                                     </ul>
                                                 </div>
@@ -114,7 +117,6 @@ function AdminLeadContacts() {
                                         id: row.id,
                                         name: row.name,
                                         companyName: row.companyName,
-                                        // imageData:row.
                                         email: row.email,
                                         addedBy: row.addedBy,
                                         savedAt: row.savedAt,
@@ -147,7 +149,7 @@ function AdminLeadContacts() {
                         </div>
                         <div className="offcanvas-body">
                             <div className="card">
-                                <AdminLeadContactEditForm />
+                            <AdminLeadContactEditForm id={selectedId} />
                             </div>
                         </div>
                     </div>

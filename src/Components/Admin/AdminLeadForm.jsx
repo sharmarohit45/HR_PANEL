@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import HeightIcon from '@mui/icons-material/Height';
 
 const AdminLeadForm = () => {
-    // State to manage the visibility of each field
     const [fields, setFields] = useState({
         name: false,
         companyName: true,
@@ -19,8 +18,6 @@ const AdminLeadForm = () => {
         product: true,
         source: true,
     });
-
-    // Handler to toggle the visibility of a field
     const handleFieldToggle = (field) => {
         setFields({
             ...fields,
