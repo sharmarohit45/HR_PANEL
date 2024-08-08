@@ -14,14 +14,17 @@ const AdminAssetsForm = () => {
     const [description, setDescription] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
             const reader = new FileReader();
+            reader.onloadend = () => {
+                setAssetPicture(file);
+            };
             reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = (error) => reject(error);
-        });
+        }
     };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
     
@@ -34,7 +37,6 @@ const AdminAssetsForm = () => {
         formData.append('status', status);
         formData.append('description', description);
     
-        // Check if assetPicture is not null or undefined
         if (assetPicture) {
             formData.append('assetPicture', assetPicture);
         }
@@ -98,6 +100,7 @@ const AdminAssetsForm = () => {
                                     onChange={(e) => setAssetType(e.target.value)}
                                 >
                                     <option value="Electronics">Electronics</option>
+                                    {/* Add more options if needed */}
                                 </select>
                             </div>
                             <div className="col">
@@ -106,7 +109,7 @@ const AdminAssetsForm = () => {
                                     type="file"
                                     id="assetPicture"
                                     className="form-control"
-                                    onChange={(e) => setAssetPicture(e.target.files[0])}
+                                    onChange={handleFileChange}
                                 />
                             </div>
                         </div>
