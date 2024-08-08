@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 
-const AdminLeadContactEditForm = ({id}) => {
+const AdminLeadContactEditForm = ({ id }) => {
     const [formData, setFormData] = useState({
         salutation: '',
         name: '',
@@ -18,7 +19,20 @@ const AdminLeadContactEditForm = ({id}) => {
         postalCode: '',
         address: '',
     });
-    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (id) {
+            // Fetch existing data if ID is provided
+            axios.get(`https://smarthrbackend-production.up.railway.app/lead/${id}`)
+                .then(response => {
+                    setFormData(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching lead contact:', error);
+                    toast.error('Failed to load lead contact');
+                });
+        }
+    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,43 +46,49 @@ const AdminLeadContactEditForm = ({id}) => {
         e.preventDefault();
         const currentDate = new Date().toISOString().split('T')[0];
         const formDataWithDate = { ...formData, savedAt: currentDate };
-        setLoading(true);
 
         try {
-            const response = await fetch('https://smarthrbackend-production.up.railway.app/lead/{id}', {
-                method: 'PUT',
+            const response = await axios.put(`https://smarthrbackend-production.up.railway.app/lead/${id}`, formDataWithDate, {
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formDataWithDate),
+                }
             });
 
-            if (response.ok) {
-                await response.json();
-                toast.success('Data Updated Successfully');
-                setFormData({
-                    salutation: '',
-                    name: '',
-                    email: '',
-                    leadSource: '',
-                    addedBy: '',
-                    companyName: '',
-                    website: '',
-                    mobile: '',
-                    officePhone: '',
-                    country: '',
-                    state: '',
-                    city: '',
-                    postalCode: '',
-                    address: '',
-                });
+            if (response.status === 200) {
+                toast.success('Lead contact updated successfully');
             } else {
-                toast.error('Failed to save lead contact');
+                console.error('Failed to update lead contact');
+                toast.error('Failed to update lead contact');
             }
         } catch (error) {
-            toast.error('Error saving lead contact');
-        } finally {
-            setLoading(false);
+            console.error('Error updating lead contact:', error);
+            toast.error('Error updating lead contact');
+        }
+    };
+
+    const handleReset = () => {
+        if (id) {
+            // Reload the page or refetch data to restore original values
+            axios.get(`https://smarthrbackend-production.up.railway.app/lead/${id}`)
+                .then(response => setFormData(response.data))
+                .catch(error => console.error('Error reloading data:', error));
+        } else {
+            setFormData({
+                salutation: '',
+                name: '',
+                email: '',
+                leadSource: '',
+                addedBy: '',
+                companyName: '',
+                website: '',
+                mobile: '',
+                officePhone: '',
+                country: '',
+                state: '',
+                city: '',
+                postalCode: '',
+                address: '',
+            });
         }
     };
 
@@ -76,17 +96,12 @@ const AdminLeadContactEditForm = ({id}) => {
         <form onSubmit={handleSubmit}>
             <div className="row mt-4">
                 <div className="col">
-                    <h3>Update Lead Contact Detail</h3>
+                    <h3>Update Lead Contact</h3>
                     <hr />
                     <div className="row">
                         <div className="col">
                             <label htmlFor="salutation">Salutation</label>
-                            <select
-                                className="form-select"
-                                name="salutation"
-                                value={formData.salutation}
-                                onChange={handleChange}
-                            >
+                            <select className="form-select" aria-label="Default select example" name="salutation" value={formData.salutation} onChange={handleChange}>
                                 <option value="">--</option>
                                 <option value="Mr.">Mr.</option>
                                 <option value="Mrs.">Mrs.</option>
@@ -101,7 +116,7 @@ const AdminLeadContactEditForm = ({id}) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="e.g. Raj Singh"
+                                placeholder="e.g. raj singh"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
@@ -111,8 +126,8 @@ const AdminLeadContactEditForm = ({id}) => {
                             <label htmlFor="email">Email</label>
                             <input
                                 type="email"
+                                placeholder="e.g. xyx@gmail.com"
                                 className="form-control"
-                                placeholder="e.g. xyz@gmail.com"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -134,6 +149,7 @@ const AdminLeadContactEditForm = ({id}) => {
                             <label htmlFor="addedBy">Added By</label>
                             <select
                                 className="form-select"
+                                aria-label="Default select example"
                                 name="addedBy"
                                 value={formData.addedBy}
                                 onChange={handleChange}
@@ -145,6 +161,7 @@ const AdminLeadContactEditForm = ({id}) => {
                                 <option value="Vikas Pandey">Vikas Pandey</option>
                             </select>
                         </div>
+                        <div className="col"></div>
                     </div>
                     <hr />
                     <div className="row">
@@ -266,24 +283,14 @@ const AdminLeadContactEditForm = ({id}) => {
                         <div className="col">
                             <div className="row">
                                 <div className="col">
-                                    <button
-                                        className="btn btn-primary form-control"
-                                        type="submit"
-                                        disabled={loading}
-                                    >
-                                        {loading ? 'Saving...' : 'Save'}
-                                    </button>
+                                    <button className="btn btn-white form-control" type="submit">Save</button>
                                 </div>
                                 <div className="col">
-                                    <button
-                                        className="btn btn-secondary form-control"
-                                        type="reset"
-                                    >
-                                        Cancel
-                                    </button>
+                                    <button className="btn btn-white form-control" type="reset" onClick={handleReset}>Cancel</button>
                                 </div>
                             </div>
                         </div>
+                        <div className="col"></div>
                     </div>
                 </div>
                 <ToastContainer />
