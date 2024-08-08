@@ -20,6 +20,7 @@ const AdminAssetsSection = () => {
         try {
             await axios.delete(`https://smarthrbackend-production.up.railway.app/assets/${assetsId}`);
             toast.success("Data Deleted Successfully");
+            getData();
         } catch (error) {
             console.error("Data fetching failed:", error);
             toast.error("Failed to Delete")
@@ -70,9 +71,9 @@ const AdminAssetsSection = () => {
                                             )
                                         },
                                         { field: 'assetName', headerName: 'Asset Name', hideable: true, width: 200 },
-                                        { field: 'lentTo', headerName: 'Lent To', hideable: true, width: 200 },
+                                        // { field: 'lentTo', headerName: 'Lent To', hideable: true, width: 200 },
                                         { field: 'status', headerName: 'Status', hideable: true, width: 300 },
-                                        { field: 'date', headerName: 'Date', hideable: true, width: 130 },
+                                        // { field: 'date', headerName: 'Date', hideable: true, width: 130 },
                                         {
                                             field: 'action', headerName: 'Action', width: 100, renderCell: (params) => (
                                                 <div>
@@ -89,11 +90,10 @@ const AdminAssetsSection = () => {
                                     rows={rows.map(row => ({
                                         id: row.assetsId,
                                         assetsId: row.assetsId,
-                                        assetPicture: row.assetPicture,
+                                        assetPicture: row.assetData,
                                         assetName: row.assetName,
-                                        lentTo: row.lentTo,
                                         status: row.status,
-                                        date: row.date,
+                                        
                                         action: row.action
 
 
@@ -111,7 +111,7 @@ const AdminAssetsSection = () => {
                             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div className="offcanvas-body">
-                            <AdminAssetsForm />
+                            <AdminAssetsForm assetData={getData}/>
                         </div>
                     </div>
                 </div>
