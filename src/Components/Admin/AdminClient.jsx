@@ -82,10 +82,10 @@ function AdminClient() {
                                             </div>
                                         ) },
                                         { field: 'email', headerName: 'Email', width: 290 },
-                                        { field: 'status', headerName: 'Status', width: 150, renderCell: (params) => (
+                                        { field: 'status', headerName: 'Status', width: 290, renderCell: (params) => (
                                             <h5 className='p-3'><i className='fa fa-circle' style={{ color: '#39e500' }}></i> Active</h5>
                                         ) },
-                                        { field: 'created', headerName: 'Created', width: 150 },
+                                        // { field: 'created', headerName: 'Created', width: 150 },
                                         {
                                             field: 'action', headerName: 'Action', width: 100, renderCell: (params) => (
                                                 <div> <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />

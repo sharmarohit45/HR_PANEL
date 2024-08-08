@@ -1,11 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.core.css';
+import React from 'react'
 
-import axios from 'axios';
-import { toast } from 'react-toastify';
-
-const AdminAddNotice = ({noticeData}) => {
+const AdminUpdateNotice = () => {
     const [noticeDetails, setNoticeDetails] = useState('');
     const [showData, setShowData] = useState(true);
     const [noticeHeading, setNoticeHeading] = useState('');
@@ -65,8 +60,7 @@ const AdminAddNotice = ({noticeData}) => {
                 noticeDetails,
                 date: formattedDate
             });
-            toast.success('Notice submitted successfully:');
-            noticeData();
+            toast.success('Notice updated successfully:');
             handleReset();
         } catch (error) {
             console.error('Error submitting notice:', error);
@@ -107,7 +101,7 @@ const AdminAddNotice = ({noticeData}) => {
                 <div className="card">
                     <div className="row mb-2">
                         <div className="col">
-                            <h2>Notice Details</h2>
+                            <h2>Update Notice Details</h2>
                         </div>
                     </div>
                     <div className="row">
@@ -204,5 +198,4 @@ const AdminAddNotice = ({noticeData}) => {
         </div >
     );
 };
-
-export default AdminAddNotice;
+export default AdminUpdateNotice
