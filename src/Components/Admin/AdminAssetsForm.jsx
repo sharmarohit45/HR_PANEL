@@ -3,70 +3,83 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AdminAssetsForm = () => {
-    const [assetName, setAssetName] = useState('');
-    const [assetType, setAssetType] = useState('Electronics');
-    const [assetPicture, setAssetPicture] = useState(null);
-    const [serialNumber, setSerialNumber] = useState('');
-    const [value, setValue] = useState('');
-    const [location, setLocation] = useState('Office');
-    const [status, setStatus] = useState('Active');
-    const [description, setDescription] = useState('');
+const AdminAssetsForm = ({assetData}) => {
+    const [formData, setFormData] = useState({
+        assetName: '',
+        assetType: '',
+        assetData: '',
+        serialNumber: '',
+        value: '',
+        location: 'Office',
+        status: 'Active',
+        description: '',
+    });
     const [loading, setLoading] = useState(false);
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
     const handleFileChange = (event) => {
-        const file = event.target.files[0];
+        const { files } = event.target;
+        const file = files[0];
+    
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload a valid image file.');
+                return;
+            }
+    
+            if (file.size > 5 * 1024 * 1024) { // 5 MB limit
+                toast.error('File size exceeds 5 MB.');
+                return;
+            }
+    
             const reader = new FileReader();
             reader.onloadend = () => {
-                setAssetPicture(file);
+                const base64String = reader.result.split(',')[1];
+                setFormData((prevState) => ({
+                    ...prevState,
+                    assetData: base64String,
+                }));
             };
             reader.readAsDataURL(file);
         }
     };
-
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
-        const formData = new FormData();
-        formData.append('assetName', assetName);
-        formData.append('assetType', assetType);
-        formData.append('serialNumber', serialNumber);
-        formData.append('value', value);
-        formData.append('location', location);
-        formData.append('status', status);
-        formData.append('description', description);
-    
-        if (assetPicture) {
-            formData.append('assetPicture', assetPicture);
-        }
-    
+        setLoading(true);
         try {
-            setLoading(true);
             await axios.post('https://smarthrbackend-production.up.railway.app/assets', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                    'Content-Type': 'application/json'
+                }
             });
             toast.success('Asset added successfully');
-            resetForm(); 
+            assetData();
+            setFormData({
+                assetName: '',
+                assetType: '',
+                assetData: '',
+                serialNumber: '',
+                value: '',
+                location: 'Office',
+                status: 'Active',
+                description: '',
+            });
         } catch (error) {
-            console.error('Error adding asset:', error);
             toast.error('Error adding asset');
+            if (error.response) {
+                console.error('Server response:', error.response.data);
+            }
         } finally {
             setLoading(false);
         }
-    };
-    
-    const resetForm = () => {
-        setAssetName('');
-        setAssetType('Electronics');
-        setAssetPicture(null);
-        setSerialNumber('');
-        setValue('');
-        setLocation('Office');
-        setStatus('Active');
-        setDescription('');
     };
 
     return (
@@ -86,22 +99,19 @@ const AdminAssetsForm = () => {
                                 <input
                                     type="text"
                                     id="assetName"
+                                    name="assetName"
                                     className="form-control"
-                                    value={assetName}
-                                    onChange={(e) => setAssetName(e.target.value)}
+                                    value={formData.assetName}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div className="col">
                                 <label htmlFor="assetType">Asset Type</label>
-                                <select
-                                    id="assetType"
+                                <input type="text" id="assetType"
+                                    name="assetType"
                                     className="form-select"
-                                    value={assetType}
-                                    onChange={(e) => setAssetType(e.target.value)}
-                                >
-                                    <option value="Electronics">Electronics</option>
-                                    {/* Add more options if needed */}
-                                </select>
+                                    value={formData.assetType}
+                                    onChange={handleChange} />
                             </div>
                             <div className="col">
                                 <label htmlFor="assetPicture">Asset Picture</label>
@@ -119,9 +129,10 @@ const AdminAssetsForm = () => {
                                 <input
                                     type="text"
                                     id="serialNumber"
+                                    name="serialNumber"
                                     className="form-control"
-                                    value={serialNumber}
-                                    onChange={(e) => setSerialNumber(e.target.value)}
+                                    value={formData.serialNumber}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div className="col">
@@ -129,9 +140,10 @@ const AdminAssetsForm = () => {
                                 <input
                                     type="text"
                                     id="value"
+                                    name="value"
                                     className="form-control"
-                                    value={value}
-                                    onChange={(e) => setValue(e.target.value)}
+                                    value={formData.value}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div className="col">
@@ -139,75 +151,30 @@ const AdminAssetsForm = () => {
                                 <input
                                     type="text"
                                     id="location"
+                                    name="location"
                                     className="form-control"
-                                    value={location}
-                                    onChange={(e) => setLocation(e.target.value)}
+                                    value={formData.location}
+                                    onChange={handleChange}
                                 />
                             </div>
                         </div>
                         <div className="row mt-3">
                             <div className="col">
                                 <label>Status</label><br />
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="status"
-                                        id="active"
-                                        value="Active"
-                                        checked={status === 'Active'}
-                                        onChange={() => setStatus('Active')}
-                                    />
-                                    <label className="form-check-label" htmlFor="active">Active</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="status"
-                                        id="nonFunctional"
-                                        value="Non Functional"
-                                        checked={status === 'Non Functional'}
-                                        onChange={() => setStatus('Non Functional')}
-                                    />
-                                    <label className="form-check-label" htmlFor="nonFunctional">Non Functional</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="status"
-                                        id="lost"
-                                        value="Lost"
-                                        checked={status === 'Lost'}
-                                        onChange={() => setStatus('Lost')}
-                                    />
-                                    <label className="form-check-label" htmlFor="lost">Lost</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="status"
-                                        id="damaged"
-                                        value="Damaged"
-                                        checked={status === 'Damaged'}
-                                        onChange={() => setStatus('Damaged')}
-                                    />
-                                    <label className="form-check-label" htmlFor="damaged">Damaged</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="status"
-                                        id="underMaintenance"
-                                        value="Under Maintenance"
-                                        checked={status === 'Under Maintenance'}
-                                        onChange={() => setStatus('Under Maintenance')}
-                                    />
-                                    <label className="form-check-label" htmlFor="underMaintenance">Under Maintenance</label>
-                                </div>
+                                {['Active', 'Non Functional', 'Lost', 'Damaged', 'Under Maintenance'].map(statusOption => (
+                                    <div className="form-check form-check-inline" key={statusOption}>
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="status"
+                                            id={statusOption}
+                                            value={statusOption}
+                                            checked={formData.status === statusOption}
+                                            onChange={handleChange}
+                                        />
+                                        <label className="form-check-label" htmlFor={statusOption}>{statusOption}</label>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className="row mt-3">
@@ -215,9 +182,10 @@ const AdminAssetsForm = () => {
                                 <label htmlFor="description">Description</label>
                                 <textarea
                                     id="description"
+                                    name="description"
                                     className="form-control"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    value={formData.description}
+                                    onChange={handleChange}
                                 ></textarea>
                             </div>
                         </div>
@@ -226,7 +194,7 @@ const AdminAssetsForm = () => {
                                 <button type="submit" className="btn btn-primary" disabled={loading}>
                                     {loading ? 'Saving...' : 'Save'}
                                 </button> &nbsp;
-                                <button type="button" className="btn btn-secondary" onClick={resetForm}>
+                                <button type="button" className="btn btn-secondary">
                                     Cancel
                                 </button>
                             </div>
