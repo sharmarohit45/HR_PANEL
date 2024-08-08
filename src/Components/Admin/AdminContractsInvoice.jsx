@@ -1,7 +1,42 @@
+import axios from 'axios';
 import { html2pdf } from 'html2pdf.js';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 const AdminContractsInvoice = () => {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [id, setId] = useState('')
+    const location = useLocation();
+    const contractId = location.state ? location.state.contractId : null;
+    useEffect(() => {
+        if (contractId) {
+            getData();
+
+        }
+    }, [contractId]);
+
+    const getData = async () => {
+        try {
+            const response = await axios.get(`https://smarthrbackend-production.up.railway.app/contract/${contractId}`);
+            setData(response.data);
+            setId(contractId)
+        } catch (error) {
+            console.log("Data fetching failed", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const deleteData = async (contractId) => {
+        try {
+            await axios.delete(`https://smarthrbackend-production.up.railway.app/contract/${contractId}`)
+            toast.success("Deleted")
+            getData();
+        } catch (error) {
+            console.log("Error in Delete : ", error);
+            toast.error("Failed")
+        }
+    }
     const handlePrint = () => {
         const printContents = document.getElementById('invoice-section').innerHTML;
         const originalContents = document.body.innerHTML;
@@ -22,6 +57,14 @@ const AdminContractsInvoice = () => {
         html2pdf().from(element).set(opt).save();
     };
 
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!data) {
+        return <div>No data available</div>;
+    }
     return (
         <>
             <div className="page-wrapper">
@@ -82,19 +125,19 @@ const AdminContractsInvoice = () => {
                                                         <tbody>
                                                             <tr>
                                                                 <th style={{ backgroundColor: '#f1f1f3' }}>Contract Number</th>
-                                                                <td>#INV-0001</td>
+                                                                <td>{data.contractNumber}1</td>
                                                             </tr>
                                                             <tr>
                                                                 <th style={{ backgroundColor: '#f1f1f3' }}>Start Date</th>
-                                                                <td>June 12, 2024</td>
+                                                                <td>{data.startDate}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th style={{ backgroundColor: '#f1f1f3' }}>End Date</th>
-                                                                <td>June 16, 2024</td>
+                                                                <td>{data.endDate}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th style={{ backgroundColor: '#f1f1f3' }}>Contract Type</th>
-                                                                <td>Junemm,dl,lds,</td>
+                                                                <td>{data.contractType}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -105,35 +148,37 @@ const AdminContractsInvoice = () => {
                                                     <h5>
                                                         Billed To:</h5>
                                                     <ul className="list-unstyled">
-                                                        <li><h5><strong>Subham Mishra</strong></h5></li>
-                                                        <li><span>Infinity Technologies</span></li>
-                                                        <li>5754 Airport Rd</li>
-                                                        <li>New Delhi</li>
-                                                        <li>India</li>
-                                                        <li>9152XXXXX0</li>
-                                                        <li><a href="mailto:subham@example.com">subham@example.com</a></li>
+                                                        <li><h5><strong>{data.client.clientName}</strong></h5></li>
+                                                        <li><span>{data.client.companyName}</span></li>
+                                                        <li>{data.client.city}</li>
+                                                        <li>{data.client.state}</li>
+                                                        <li>{data.client.country}</li>
+                                                        <li>{data.client.mobileNo}</li>
+                                                        <li>
+                                                            <a href={`mailto:${data.client.email}`}>{data.client.email}</a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div className="row">
                                                 <div className="col">
                                                     <h4><b>Subject</b></h4>
-                                                    <p>Abcdef</p>
+                                                    <p>{data.subject}</p>
                                                 </div>
                                             </div>
                                             <div className="row">
                                                 <div className="col">
                                                     <h4><b>Notes</b></h4>
-                                                    <p></p>
+                                                    <p>{data.notes}</p>
                                                 </div>
                                             </div>
                                             <div className="row">
                                                 <h4><b>Description</b></h4>
-                                                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Beatae, voluptate sunt nulla nisi quam placeat. Cumque reiciendis nulla voluptatum? Quasi placeat esse quae vero ut. Odit iure soluta nobis ad facilis officiis numquam dolores fugiat exercitationem, nihil omnis ea. Eos magnam quasi voluptatum officia illum perferendis nisi illo animi! Saepe quisquam officia fugiat deleniti natus, maxime quo suscipit aspernatur iste sit aperiam, quam repudiandae nemo reprehenderit possimus doloremque. Architecto, quam nam. Perferendis, alias nam odit odio omnis, officia aperiam veniam possimus enim doloremque accusamus dolores sunt assumenda facilis deserunt corporis.</p>
+                                                <div dangerouslySetInnerHTML={{ __html: data.description }} />
                                             </div>
                                             <div className="row">
-                                                <div className="col text-end" style={{border:'1px solid gray',borderRight:'none',borderLeft:'none'}}>
-                                                    <h4 className='p-2'><b>Contract Value: $773.00</b></h4>
+                                                <div className="col text-end" style={{ border: '1px solid gray', borderRight: 'none', borderLeft: 'none' }}>
+                                                    <h4 className='p-2'><b>Contract Value: {data.contractValue}</b></h4>
                                                 </div></div>
                                             <div>
                                             </div>
@@ -144,30 +189,31 @@ const AdminContractsInvoice = () => {
                             <div className="row">
                                 <div className="col">
                                     <div className="input-group m-3">
+                                       
+                                        <Link to="/admin/contracts"><button type="button" className='btn btn-white'>Cancel</button></Link>
+                                        &nbsp; &nbsp;
                                         <button type="button" className="btn btn-outline-secondary">Action</button>
                                         <button type="button" className="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span className="visually-hidden">Toggle Dropdown</span>
                                         </button>
                                         <ul className="dropdown-menu dropdown-menu-end">
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-edit'></i> Edit</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-trash'></i> Delete</a></li>
-                                            <li><a className="dropdown-item" href="" onClick={handleDownload}><i className='fa fa-download'></i> Download</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-paper-plane'></i> Send</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-plus'></i> Add Shipping Address</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-bell'></i> Payment Reminder</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-plus'></i> Add Payment</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-copy'></i> Copy Payment Link</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-external-link-alt'></i> Copy Payment Link</a></li>
-                                            <li><a className="dropdown-item" href=""><i className='fa fa-copy'></i> Create Duplicate</a></li>
-
-
-                                        </ul> &nbsp; &nbsp;
-                                        <Link to="/admin/proposal"><button type="button" className='btn btn-white'>Cancel</button></Link>
+                                            <li><a className="dropdown-item" ><i className='fa fa-edit'></i> Edit</a></li>
+                                            <li  onClick={() => deleteData(data.contractId)}><a className="dropdown-item" ><i className='fa fa-trash'></i> Delete</a></li>
+                                            <li><a className="dropdown-item"  onClick={handleDownload}><i className='fa fa-download'></i> Download</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-paper-plane'></i> Send</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-plus'></i> Add Shipping Address</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-bell'></i> Payment Reminder</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-plus'></i> Add Payment</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-copy'></i> Copy Payment Link</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-external-link-alt'></i> Copy Payment Link</a></li>
+                                            <li><a className="dropdown-item" ><i className='fa fa-copy'></i> Create Duplicate</a></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <ToastContainer />
                 </div>
             </div>
         </>

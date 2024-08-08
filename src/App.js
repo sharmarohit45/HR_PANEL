@@ -233,7 +233,7 @@ function App() {
 
             {/* Admin Work Section Routing */}
             <Route path='/admin/contracts' element={<AdminContractsSection />} />
-            <Route path='/admin/contracts-invoice' element={<AdminContractsInvoice />} />
+            <Route path='/admin/contracts-invoice/:contractId' element={<AdminContractsInvoice />} />
             <Route path='/admin/projects' element={<AdminProjectsSection />} />
             <Route path='/admin/tasks' element={<AdminTasksSection />} />
             <Route path='/admin/my-tasks' element={<AdminMyTasks />} />
