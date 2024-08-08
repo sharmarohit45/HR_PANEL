@@ -62,13 +62,10 @@ const AdminProposalSection = () => {
                     />
                     <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}
                     >
-                        <li><a className="dropdown-item" href="#" onClick={() => handleProfileChange(params.row.id)}><i className="fa fa-eye"></i> View</a></li>
-                        {/* <li><a className="dropdown-item" href="#"><i className="fa fa-link"></i> &nbsp; Public link</a></li>
-                        <li><a className="dropdown-item" href="#"><i className="fa fa-download"></i> &nbsp; Download</a></li> */}
-                        <li><a className="dropdown-item" href="#"><i className="fa fa-pen"></i> &nbsp; Edit</a></li>
-                        {/* <li><a className="dropdown-item" href="#"><i className="fa fa-paper-plane"></i> &nbsp; Send</a></li> */}
-                        <li><a className="dropdown-item" href="#"><i className="fa fa-plus"></i> &nbsp; Create invoice</a></li>
-                        <li onClick={()=>deleteData(params.row.id)}><a className="dropdown-item" href="#"><i className="fa fa-trash" aria-hidden="true"></i> &nbsp; Delete</a></li>
+                        <li><a className="dropdown-item" onClick={() => handleProfileChange(params.row.id)}><i className="fa fa-eye"></i> View</a></li>
+                        <li><a className="dropdown-item"><i className="fa fa-pen"></i> &nbsp; Edit</a></li>
+                        <li><a className="dropdown-item"><i className="fa fa-plus"></i> &nbsp; Create invoice</a></li>
+                        <li onClick={()=>deleteData(params.row.id)}><a className="dropdown-item"><i className="fa fa-trash" aria-hidden="true"></i> &nbsp; Delete</a></li>
                     </ul>
                 </div>
             )
