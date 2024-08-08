@@ -5,6 +5,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminAssetsForm from './AdminAssetsForm';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 const AdminAssetsSection = () => {
     const [rows, setRows] = useState([]);
     const getData = async () => {
@@ -13,6 +14,15 @@ const AdminAssetsSection = () => {
             setRows(response.data);
         } catch (error) {
             console.error("Data fetching failed:", error);
+        }
+    };
+    const deleteData = async (assetsId) => {
+        try {
+            await axios.delete(`https://smarthrbackend-production.up.railway.app/assets/${assetsId}`);
+            toast.success("Data Deleted Successfully");
+        } catch (error) {
+            console.error("Data fetching failed:", error);
+            toast.error("Failed to Delete")
         }
     };
     useEffect(() => {
@@ -68,9 +78,9 @@ const AdminAssetsSection = () => {
                                                 <div>
                                                     <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                     <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
-                                                        <li><a className="dropdown-item" href="#"><i className="fa fa-eye"></i> View</a></li>
-                                                        <li><a className="dropdown-item" href="#"><i className="fa fa-edit"></i> Edit</a></li>
-                                                        <li><a className="dropdown-item" href="#"><i className="fa fa-trash"></i> Delete</a></li>
+                                                        <li><a className="dropdown-item"><i className="fa fa-eye"></i> View</a></li>
+                                                        <li><a className="dropdown-item"><i className="fa fa-edit"></i> Edit</a></li>
+                                                        <li onClick={()=>deleteData(params.row.assetsId)}><a className="dropdown-item"><i className="fa fa-trash"></i> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             )
@@ -78,6 +88,7 @@ const AdminAssetsSection = () => {
                                     ]}
                                     rows={rows.map(row => ({
                                         id: row.assetsId,
+                                        assetsId: row.assetsId,
                                         assetPicture: row.assetPicture,
                                         assetName: row.assetName,
                                         lentTo: row.lentTo,
@@ -104,6 +115,7 @@ const AdminAssetsSection = () => {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </>
     )
