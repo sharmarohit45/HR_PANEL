@@ -19,7 +19,6 @@ import ClientTickets from './Components/Client/ClientTickets';
 import ClientEvents from './Components/Client/ClientEvents';
 import ClientNoticeBoard from './Components/Client/ClientNoticeBoard';
 import ClientSettings from './Components/Client/ClientSettings';
-import ClientContracts from './Components/Client/ClientContracts';
 import ClientProjectCalender from './Components/Client/ClientProjectCalender';
 import ClientTaskCalender from './Components/Client/ClientTaskCalender';
 import ClientTaskBoard from './Components/Client/ClientTaskBoard';
@@ -186,6 +185,8 @@ import AdminAwardForm from './Components/Admin/AdminAwardForm';
 import AdminRecruitInterviewScheduleList from './Components/Admin/AdminRecruitInterviewScheduleList';
 import ErrorPage from './Components/DefaultPages/ErrorPage';
 import AdminCLientEditForm from './Components/Admin/AdminCLientEditForm';
+import ClientContractsSection from './Components/Client/ClientContractsSection';
+import ClientContractInvoice from './Components/Client/ClientContractInvoice';
 function App() {
   const isLoggedIn = localStorage.getItem('token');
   return (
@@ -400,8 +401,9 @@ function App() {
             {/* <Route path='/client' element={<ProtectedRoute element={ClientHome} roleRequired="Client" />}> */}
             {/* <Route path='/client' element={<ProtectedRoute element={ClientHome} roleRequired="Client" />}> */}
             <Route index element={<User_Dashboard />} />
-            <Route path='/client/Contracts' element={<ClientContracts />} />
             <Route path='/client/client-profile' element={<ClientProfile />} />
+            <Route path='/client/Contracts' element={<ClientContractsSection />} />
+            <Route path='/client/contracts-invoice/:contractId' element={<ClientContractInvoice />} />
             <Route path='/client/client-project' element={<ClientProjects />} />
             <Route path='/client/client-project-calender' element={<ClientProjectCalender />} />
             <Route path='/client/Tasks' element={<ClientTask />} />

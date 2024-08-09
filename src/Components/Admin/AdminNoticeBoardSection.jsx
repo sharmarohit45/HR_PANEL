@@ -83,7 +83,11 @@ const AdminNoticeBoardSection = () => {
                                                 <div>
                                                     <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                     <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
-                                                        <li data-bs-toggle="offcanvas" data-bs-target="#canvasModal" aria-controls="canvasModal"><a className="dropdown-item"><i className="fa fa-eye"></i> View </a></li>
+                                                        <li data-bs-toggle="offcanvas" style={{ cursor: 'pointer' }}
+                                                            data-bs-target="#canvasModal"
+                                                            aria-controls="canvasModal"
+                                                            onClick={() => handleViewClick(params.row)}>
+                                                                <a className="dropdown-item"><i className="fa fa-eye"></i> View </a></li>
                                                         <li><a className="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUpdate" aria-controls="offcanvasRight"><i className="fa fa-pen"></i> Edit</a></li>
                                                         <li onClick={() => deleteData(params.row.id)}><a className="dropdown-item"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
                                                     </ul>

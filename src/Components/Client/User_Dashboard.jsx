@@ -1,39 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom'
-import Chart from "react-apexcharts";
+import { Link } from 'react-router-dom';
+import { PieChart } from '@mui/x-charts/PieChart';
+import axios from "axios";
 
 function User_Dashboard() {
-    const [subject, setSubject] = useState([
+    const [rows, setRows] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [pieData, setPieData] = useState([]);
+    const [totalProjects, setTotalProjects] = useState(0);
+    const email = localStorage.getItem('email');
 
-    ]);
-    const [Percentage, setPercentage] = useState([
-    ]);
+    async function getData() {
+        try {
+            const response = await axios.get("https://smarthrbackend-production.up.railway.app/getallProject");
+            const projects = response.data;
+            const filteredProjects = projects.filter(project => 
+                project.client && project.client.email === email
+            );
+    
+            setRows(filteredProjects);
+            setTotalProjects(filteredProjects.length);
+            setLoading(false);
+            const labels = [
+                "in progress",
+                "not started",
+                "on hold",
+                "canceled",
+                "finished"
+            ];
 
+            const statusCounts = labels.reduce((acc, label) => {
+                acc[label] = 0;
+                return acc;
+            }, {});
+    
+            
+            filteredProjects.forEach(project => {
+                const status = project.status || "Unknown"; 
+                if (statusCounts.hasOwnProperty(status)) {
+                    statusCounts[status]++;
+                } else {
+                    statusCounts["Unknown"] = (statusCounts["Unknown"] || 0) + 1;
+                }
+            });
+    
+            // Convert the statusCounts object to array format for PieChart
+            const pieChartData = Object.entries(statusCounts).map(([label, value], id) => ({
+                id,
+                label,
+                value,
+            }));
+    
+            setPieData(pieChartData);
+    
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setLoading(false);
+        }
+    }
+    
 
     useEffect(() => {
-        const sSubject = [];
-        const sMarks = [];
-        const getStudentdata = async () => {
-            const resData = [
-
-                { "id": 1, "subject": "in Progress", "percentage": 100 },
-                { "id": 2, "subject": "not Started", "percentage": 0 },
-                { "id": 3, "subject": "on hold", "percentage": 0 },
-                { "id": 3, "subject": "cancelled", "percentage": 0 },
-                { "id": 3, "subject": "finished", "percentage": 0 }
-            ]
-            
-            for (let i = 0; i < resData.length; i++) {
-                sSubject.push(resData[i].subject);
-                sMarks.push(parseInt(resData[i].percentage));
-            }
-            setSubject(sSubject);
-            setPercentage(sMarks);
-            //console.log(resData); 
-        }
-
-        getStudentdata();
-
+        getData();
     }, []);
 
     return (
@@ -53,21 +81,19 @@ function User_Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="row ">
+                    <div className="row">
                         <div className="col-4">
                             <div className="card">
                                 <div className="row p-2">
                                     <div className='col-10'>
                                         <h4><b>Total Projects</b></h4>
-                                        <p>2</p>
+                                        <p>{totalProjects}</p>
                                     </div>
                                     <div className="col-2">
-                                        <i className="fas fa-layer-group" style={{ fontSize: '25px', paddingTop: '10px',color:'gray'}}></i>
+                                        <i className="fas fa-layer-group" style={{ fontSize: '25px', paddingTop: '10px', color: 'gray' }}></i>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
                         <div className="col-4">
                             <div className="card">
@@ -77,7 +103,7 @@ function User_Dashboard() {
                                         <p>0</p>
                                     </div>
                                     <div className="col-2">
-                                        <i className="fas fa-ticket-alt" style={{ fontSize: '25px', paddingTop: '10px',color:'gray' }}></i>
+                                        <i className="fas fa-ticket-alt" style={{ fontSize: '25px', paddingTop: '10px', color: 'gray' }}></i>
                                     </div>
                                 </div>
                             </div>
@@ -90,10 +116,9 @@ function User_Dashboard() {
                                         <p>0</p>
                                     </div>
                                     <div className="col-2">
-                                        <i className="fas fa-file-signature" style={{ fontSize: '25px', paddingTop: '10px',color:'gray' }}></i>
+                                        <i className="fas fa-file-signature" style={{ fontSize: '25px', paddingTop: '10px', color: 'gray' }}></i>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -115,29 +140,27 @@ function User_Dashboard() {
                                         </div>
                                     </div>
                                     <div className="col-2">
-                                        <i className="fas fa-file-alt" style={{ fontSize: '25px', paddingTop: '10px',color:'gray' }}></i>
+                                        <i className="fas fa-file-alt" style={{ fontSize: '25px', paddingTop: '10px', color: 'gray' }}></i>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                        <div className="col-8">
-                        </div>
+                        <div className="col-8"></div>
                     </div>
                     <div className="row">
                         <div className="col-6">
                             <div className="card p-5" style={{ height: '500px' }}>
-                            <h4><b>Status wise Project</b></h4>
+                                <h4><b>Status wise Project</b></h4>
                                 <div className="row p-5">
-                                <Chart
-                                    type="pie"
-                                    series={Percentage}
-                                    options={{
-                                        noData: { text: "Empty Data" },
-                                        labels: subject
-
-                                    }}
-                                />
+                                    <PieChart
+                                        series={[
+                                            {
+                                                data: pieData,
+                                            }
+                                        ]}
+                                        width={500}
+                                        height={200}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -146,7 +169,7 @@ function User_Dashboard() {
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-export default User_Dashboard
+export default User_Dashboard;

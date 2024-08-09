@@ -5,6 +5,7 @@ import { GridToolbar } from '@mui/x-data-grid';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminAddProjectForm from './AdminAddProjectForm';
 import { toast, ToastContainer } from 'react-toastify';
+import AdminProjectEditForm from './AdminProjectEditForm';
 
 const AdminProjectsSection = () => {
     const [rows, setRows] = useState([]);
@@ -149,7 +150,7 @@ const AdminProjectsSection = () => {
                                                         <MoreVertIcon style={{ fontSize: '20px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
                                                         <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
                                                             <li><a className="dropdown-item" ><i className="fa fa-eye"></i> View</a></li>
-                                                            <li ><a className="dropdown-item"><i className="fa fa-pen"></i> Edit</a></li>
+                                                            <li ><a className="dropdown-item"  data-bs-toggle="offcanvas" data-bs-target="#EditoffcanvasRight" aria-controls="offcanvasRight"><i className="fa fa-pen"></i> Edit</a></li>
                                                             {/* <li><a className="dropdown-item"><i className="fa fa-copy"></i> Duplicate</a></li>
                                                             <li><a className="dropdown-item"><i className="fa fa-project-diagram"></i> Gant Chart</a></li>
                                                             <li><a className="dropdown-item"><i className="fa fa-share-square"></i> Public Gant Chart</a></li>
@@ -195,6 +196,15 @@ const AdminProjectsSection = () => {
                             </div>
                             <div className="offcanvas-body">
                                 <AdminAddProjectForm onProject={getData} />
+                            </div>
+                        </div>
+                        <div className="offcanvas offcanvas-end" tabIndex="-1" id="EditoffcanvasRight" aria-labelledby="offcanvasRightLabel" style={{ width: '85%' }}>
+                            <div className="offcanvas-header">
+                                <h2 id="offcanvasRightLabel" className='text-bold'><b>Update Project</b></h2>
+                                <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div className="offcanvas-body">
+                                <AdminProjectEditForm />
                             </div>
                         </div>
                     </div>

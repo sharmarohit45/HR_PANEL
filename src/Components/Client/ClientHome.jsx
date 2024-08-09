@@ -257,11 +257,11 @@ function ClientHome() {
 							<div className="tab-pane fade" id="v-pills-jobs" role="tabpanel" aria-labelledby="v-pills-jobs-tab">
 								<p>Work</p>
 								<ul>
-									<li><Link to="/client/contracts">Contracts</Link></li>
 									<li><Link to="/client/client-project">Projects</Link></li>
 									<li><Link to="/client/tasks">Tasks</Link></li>
 									<li><Link to="/client/timesheet">TimeSheet</Link></li>
 									<li><Link to="/client/project-roadmap">Project Roadmap</Link></li>
+									<li><Link to="/client/Contracts">Contracts</Link></li>
 								</ul>
 							</div>
 							<div className="tab-pane fade" id="v-pills-payroll" role="tabpanel" aria-labelledby="v-pills-payroll-tab">

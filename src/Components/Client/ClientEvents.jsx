@@ -1,47 +1,58 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import axios from 'axios';
 function ClientEvents() {
-  return (
-    <>
-    <div className="page-wrapper">
-      <div className="content container-fluid">
-        {/* <!-- Page Header --> */}
-        <div className="row">
-          <div className="col-md-12">
-            <div className="page-head-box">
-              <h3>Events</h3>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">Dashboard</li>
-                  <li className="breadcrumb-item active" aria-current="page">Events</li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-        {/* <!-- /Page Header --> */}
-        <div className="row mt-2">
-            <div className="col-12">
-              <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="dayGridMonth"
-                headerToolbar={{
-                  start: "today prev,next",
-                  center: "title",
-                  end: "dayGridMonth,dayGridWeek,dayGridDay",
-                }}
-              />
-            </div>
+  const [events, setEvents] = useState([]);
 
-          </div>
-      </div>
-    </div>
-  </>
-  )
-}
+    useEffect(() => {
+        async function getEventsData() {
+            try {
+                const response = await axios.get("https://smarthrbackend-production.up.railway.app/events");
+                const eventData = response.data.map(event => ({
+                    title: event.eventName,
+                    start: event.startsOnDate + 'T' + event.startsOnTime,
+                    end: event.endsOnDate + 'T' + event.endsOnTime,
+                }));
+                setEvents(eventData);
+            } catch (error) {
+                console.log("Data fetching failed", error);
+            }
+        }
+        
+        getEventsData();
+    }, []);
+
+    return (
+        <>
+            <div className="page-wrapper">
+                <div className="content container-fluid pb-0">
+                    <div className="row mt-2">
+                        <div className="col-sm-12">
+                            <div className="card">
+                                <div className="card-body">
+                                    <FullCalendar
+                                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                                        initialView="dayGridMonth"
+                                        headerToolbar={{
+                                            start: "today prev,next",
+                                            center: "title",
+                                            end: "dayGridMonth,dayGridWeek,dayGridDay",
+                                        }}
+                                        events={events}
+                                        
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
 
 export default ClientEvents
