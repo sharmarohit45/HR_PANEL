@@ -12,7 +12,7 @@ function AdminAddLeaveForm({fetchLeaveData}) {
         employeeId: '',
         leaveType: '',
         status: 'Pending',
-        leaveDuration: 'Full Day', // default value
+        leaveDuration: 'Full Day',
         leaveDate: '',
         absenceReason: '',
         file: null,
