@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios';
 
 const EmployeeAppreciationSection = () => {
     const [rows, setRows] = useState([]);

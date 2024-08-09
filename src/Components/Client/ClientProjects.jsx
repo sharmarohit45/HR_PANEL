@@ -1,12 +1,39 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import ListIcon from '@mui/icons-material/List';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import axios from 'axios';
+
 function ClientProjects() {
-  const [rows, setRows] = useState();
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const email = localStorage.getItem('email'); // Assuming this is the client's email
+
+  async function getData() {
+    try {
+      const response = await axios.get("https://smarthrbackend-production.up.railway.app/getallProject");
+      const projects = response.data;
+
+      // Filter projects where the client's email matches
+      const filteredProjects = projects.filter(project => 
+        project.client && project.client.email === email
+      );
+
+      setRows(filteredProjects);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <>
       <div className="page-wrapper">
@@ -25,72 +52,116 @@ function ClientProjects() {
               </div>
             </div>
           </div>
-          {/* <!-- /Page Header --> */}
-          <div className="row d-flex justify-content-end">
-            <div className="col-2 p-2">
-              <div className="btn-group">
-                <Link to="/client/client-project" className=" btn btn-white active " aria-current="page"><ListIcon /></Link>
-                <Link to="/client/client-project-calender" className=" btn btn-white"><CalendarTodayIcon /></Link>
-                <Link to="/client/client-project" className=" btn btn-white p-2"><PushPinIcon /></Link>
-              </div>
-            </div>
-          </div>
           <div className="row">
             <div className="col-12">
-              <DataGrid
-                columns={[
-                  // { field: 'id', headerName: 'id', hideable: true, width: 100 },
-                  { field: 'code', headerName: 'Code', hideable: true, width: 155 },
-                  {
-                    field: 'projectName', headerName: 'Project Name', hideable: true, width: 155
-                  },
-                  {
-                    field: 'members', headerName: 'Members', hideable: true, width: 155
-                  },
-                  {
-                    field: 'startDate', headerName: 'Start Date', hideable: true, width: 155
-                  },
-                  {
-                    field: 'deadline', headerName: 'Deadline', hideable: true, width: 155
-                  },
-                  {
-                    field: 'status', headerName: 'Status', hideable: true, width: 155
-                  },
-                  {
-                    field: 'action', headerName: 'Action', width: 100, renderCell: (params) => (
-                      <div className="btn-group" role="group" aria-label="Basic outlined example">
-                        <MoreVertIcon style={{ fontSize: '15px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="true" />
-                        <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
-                          <li><a className="dropdown-item" href="#"><i className="fa fa-eye"></i> View</a></li>
-                          <li><a className="dropdown-item" href="#"><i className="fa fa-trash" aria-hidden="true"></i> Delete</a></li>
-                        </ul>
-                      </div>
-                    )
-                  },
-                ]}
-                // rows={rows
-                //          rows.map(row => ({
-                //             id: row.id,
-                //     //     name: row.name,
-                //     //     companyName: row.companyName,
-                //     //     email: row.email,
-                //     //     addedBy: row.addedBy,
-                //     //     savedAt: row.savedAt,
-                //     //     action: row.action
-                //      }))
-                // }
-                slots={{
-                  toolbar: GridToolbar,
-                }}
-                checkboxSelection
-              />
+              <div className="card" style={{ minHeight: '600px' }}>
+                <DataGrid
+                  columns={[
+                    { field: 'id', headerName: 'ID', hideable: false, width: 100 },
+                    { field: 'code', headerName: 'Project Code', hideable: false, width: 150 },
+                    { field: 'projectName', headerName: 'Project Name', hideable: false, width: 150 },
+                    {
+                      field: 'members',
+                      headerName: 'Members',
+                      hideable: false,
+                      width: 200,
+                      renderCell: (params) => {
+                        // Ensure params.value is an array of member objects
+                        const members = params.value || [];
+
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                            {members.length > 0 ? (
+                              members.map((member, index) => (
+                                <div key={index} style={{ display: 'flex', alignItems: 'center', marginRight: '10px', paddingTop: '10px' }}>
+                                  {member.imageData ? (
+                                    <img
+                                      src={`data:image/png;base64,${member.imageData}`}
+                                      alt={`Image of ${member.empName}`}
+                                      style={{ height: '30px', width: '30px', borderRadius: '50%' }}
+                                    />
+                                  ) : (
+                                    <div style={{ height: '30px', width: '30px', borderRadius: '50%', backgroundColor: '#ccc' }} />
+                                  )}
+                                </div>
+                              ))
+                            ) : (
+                              <span>No Members</span>
+                            )}
+                          </div>
+                        );
+                      }
+                    },
+                    { field: 'startDate', headerName: 'Start Date', hideable: false, width: 150 },
+                    { field: 'deadline', headerName: 'Deadline', hideable: false, width: 150 },
+                    {
+                      field: 'client',
+                      headerName: 'Client',
+                      hideable: false,
+                      width: 200,
+                      renderCell: (params) => {
+                        const { clientName, imageProfileData } = params.value || {};
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                            {imageProfileData ? (
+                              <img
+                                src={`data:image/png;base64,${imageProfileData}`}
+                                alt={`Profile of ${clientName}`}
+                                style={{ height: '30px', width: '30px', borderRadius: '50%', marginRight: '10px' }}
+                              />
+                            ) : (
+                              <div style={{ height: '30px', width: '30px', borderRadius: '50%', backgroundColor: '#ccc', marginRight: '10px' }} />
+                            )}
+                            <span>{clientName || 'No Client Name'}</span>
+                          </div>
+                        );
+                      }
+                    },
+                    {
+                      field: 'status', headerName: 'Status', hideable: false, width: 150,
+                    },
+                    {
+                      field: 'action', headerName: 'Action', width: 190, renderCell: (params) => (
+                        <div>
+                          <MoreVertIcon style={{ fontSize: '20px' }} className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" />
+                          <ul className="dropdown-menu btn" aria-labelledby="dropdownMenuLink" style={{ fontSize: 'smaller' }}>
+                            <li><a className="dropdown-item" ><i className="fa fa-eye"></i> View</a></li>
+                          </ul>
+                        </div>
+                      )
+                    },
+                  ]}
+                  rows={rows.map(row => ({
+                    id: row.id,
+                    projectId: row.id,
+                    code: row.code,
+                    projectName: row.projectName,
+                    members: row.members.map(emp => ({
+                      empName: emp.empName,
+                      imageData: emp.imageData
+                    })),
+                    startDate: row.startDate,
+                    deadline: row.deadline,
+                    client: {
+                      clientName: row.client.clientName,
+                      imageProfileData: row.client.imageProfileData
+                    },
+                    status: row.status,
+                    imageProfileData: row.client.imageProfileData
+                  }))}
+                  loading={loading}
+                  slots={{
+                    toolbar: GridToolbar,
+                  }}
+                />
+              </div>
             </div>
           </div>
 
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default ClientProjects
+export default ClientProjects;
