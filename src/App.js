@@ -29,7 +29,6 @@ import ClientProducts from './Components/Client/ClientProducts';
 import ClientProductsCart from './Components/Client/ClientProductsCart';
 import ClientCreateTicket from './Components/Client/ClientCreateTicket';
 import AdminPrivateDashboard from './Components/Admin/AdminPrivateDashboard';
-import ClientProfile from './Components/Client/ClientProfile';
 import AdminClient from './Components/Admin/AdminClient';
 import AdminTicketTab from './Components/Admin/AdminTicketTab';
 import AdminClientSection from './Components/Admin/AdminClientSection'
@@ -401,7 +400,6 @@ function App() {
             {/* <Route path='/client' element={<ProtectedRoute element={ClientHome} roleRequired="Client" />}> */}
             {/* <Route path='/client' element={<ProtectedRoute element={ClientHome} roleRequired="Client" />}> */}
             <Route index element={<User_Dashboard />} />
-            <Route path='/client/client-profile' element={<ClientProfile />} />
             <Route path='/client/Contracts' element={<ClientContractsSection />} />
             <Route path='/client/contracts-invoice/:contractId' element={<ClientContractInvoice />} />
             <Route path='/client/client-project' element={<ClientProjects />} />

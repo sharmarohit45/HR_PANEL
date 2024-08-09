@@ -16,7 +16,7 @@ function AdminAddClient({onAddClient}) {
         password: '',
         country: '',
         mobileNo: '',
-        gender: '',
+        gendar: '',
         changeLanguage: '',
         clientCategory: '',
         clientSubCategory: '',
@@ -143,8 +143,8 @@ function AdminAddClient({onAddClient}) {
                     </div>
                     <div className="row mt-4">
                         <div className="col">
-                            <label>Gender</label>
-                            <select className="form-select" name='gender' value={formData.gender} onChange={handleChange}>
+                            <label>gendar</label>
+                            <select className="form-select" name='gendar' value={formData.gendar} onChange={handleChange}>
                                 <option value="">--</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
