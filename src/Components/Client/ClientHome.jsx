@@ -174,7 +174,6 @@ function ClientHome() {
 								<span>{user.clientName}</span>
 							</a>
 							<div className="dropdown-menu">
-								<Link className="dropdown-item" to="/client/client-profile"><i className='fa fa-user'></i> &nbsp;My Profile</Link>
 								<Link className="dropdown-item" to="/client/settings"><i className='fa fa-cog'></i> &nbsp;Settings</Link>
 								<Link className="dropdown-item" to="/" onClick={handleLogout}><i className='fa fa-power-off'></i> &nbsp;Logout</Link>
 							</div>
@@ -186,7 +185,6 @@ function ClientHome() {
 					<div className="dropdown mobile-user-menu">
 						<a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa fa-ellipsis-v"></i></a>
 						<div className="dropdown-menu dropdown-menu-right">
-							<Link className="dropdown-item" to="/clientprofile"><i className='fa fa-user'></i> &nbsp;My Profile</Link>
 							<Link className="dropdown-item" to="/client/settings"><i className='fa fa-cog'></i> &nbsp;Settings</Link>
 							<Link className="dropdown-item" to="/" onClick={handleLogout}><i className='fa fa-power-off'></i> &nbsp;Logout</Link>
 						</div>

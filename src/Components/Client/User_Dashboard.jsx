@@ -5,6 +5,7 @@ import axios from "axios";
 
 function User_Dashboard() {
     const [rows, setRows] = useState([]);
+    const [client, setClient] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pieData, setPieData] = useState([]);
     const [totalProjects, setTotalProjects] = useState(0);
@@ -14,10 +15,10 @@ function User_Dashboard() {
         try {
             const response = await axios.get("https://smarthrbackend-production.up.railway.app/getallProject");
             const projects = response.data;
-            const filteredProjects = projects.filter(project => 
+            const filteredProjects = projects.filter(project =>
                 project.client && project.client.email === email
             );
-    
+
             setRows(filteredProjects);
             setTotalProjects(filteredProjects.length);
             setLoading(false);
@@ -33,34 +34,51 @@ function User_Dashboard() {
                 acc[label] = 0;
                 return acc;
             }, {});
-    
-            
+
+
             filteredProjects.forEach(project => {
-                const status = project.status || "Unknown"; 
+                const status = project.status || "Unknown";
                 if (statusCounts.hasOwnProperty(status)) {
                     statusCounts[status]++;
                 } else {
                     statusCounts["Unknown"] = (statusCounts["Unknown"] || 0) + 1;
                 }
             });
-    
+
             // Convert the statusCounts object to array format for PieChart
             const pieChartData = Object.entries(statusCounts).map(([label, value], id) => ({
                 id,
                 label,
                 value,
             }));
-    
+
             setPieData(pieChartData);
-    
+
         } catch (error) {
             console.error('Error fetching data:', error);
             setLoading(false);
         }
     }
-    
+
+    async function clientData() {
+        try {
+            const response = await axios.get("https://smarthrbackend-production.up.railway.app/allclient");
+            const clients = response.data;
+            const filteredClient = clients.find(clientData =>
+                clientData.email === email
+            );
+
+            setClient(filteredClient || {});
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setLoading(false);
+        }
+    }
+
+
 
     useEffect(() => {
+        clientData();
         getData();
     }, []);
 
@@ -81,7 +99,63 @@ function User_Dashboard() {
                             </div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="card mb-0">
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="profile-view">
+                                        <div className="profile-img-wrap">
+                                            <div className="profile-img">
+                                                <a href="#"><img alt="" src={`data:image/png;base64,${client.imageProfileData}`} /></a>
+                                            </div>
+                                        </div>
+                                        <div className="profile-basic">
+                                            <div className="row">
+                                                <div className="col-md-5">
+                                                    <div className="profile-info-left">
+                                                        <h3 className="user-name m-t-0 mb-0">{client.salutation} {client.clientName || "CLient Name"}</h3>
+                                                        <ul className="personal-info mt-1">
+                                                            <li>
+                                                                <div className="title">Company : </div>
+                                                                <div className="text">{client.companyName}</div>
+                                                            </li>
+                                                            <li>
+                                                                <div className="title">Website : </div>
+                                                                <div className="text"><a href={client.officialWebsite}>{client.officialWebsite}</a></div>
+                                                            </li>
+                                                            <li>
+                                                                <div className="title">Phone:</div>
+                                                                <div className="text"><a href="">{client.mobileNo}</a></div>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-7">
+                                                    <ul className="personal-info mt-4">
+                                                        <li>
+                                                            <div className="title">Email:</div>
+                                                            <div className="text"><a href="">{client.email}</a></div>
+                                                        </li>
+                                                        <li>
+                                                            <div className="title">Company Address:</div>
+                                                            <div className="text">{client.companyAddress}</div>
+                                                        </li>
+                                                        <li>
+                                                            <div className="title">Gender:</div>
+                                                            <div className="text">{client.gendar}</div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* <div className="pro-edit"><i className="fas fa-pencil-alt"></i></div> */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row mt-5">
                         <div className="col-4">
                             <div className="card">
                                 <div className="row p-2">
