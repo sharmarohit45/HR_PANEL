@@ -158,14 +158,14 @@ function AdminLeaveSection() {
                     </div>
                 </div>
                 <div className="offcanvas offcanvas-end" tabIndex="-1" id="viewDetails" aria-labelledby="offcanvasRightLabel" style={{ width: '85%' }}>
-                    <div className="offcanvas-header">
-                        <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <div className="offcanvas-header bg-primary text-white p-4">
+                        <button type="button" className="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div className="offcanvas-body">
                         <div className="card p-4">
                             <div className="row">
                                 <div className="col">
-                                    <h3 id="offcanvasRightLabel" className='text-bold'><b>Leave Details</b></h3>
+                                    <h3 id="offcanvasRightLabel" className='text-bold'><b>Leave Info</b></h3>
                                 </div>
                                 <div className="col text-end">
                                     <i className='fa fa-ellipsis-h pt-2' data-bs-toggle="dropdown" aria-expanded="false" style={{ cursor: 'pointer' }}></i>
